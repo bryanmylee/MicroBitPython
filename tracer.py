@@ -3,14 +3,45 @@ from microbit import *
 ACCELERATION = 0.001
 MIN_POS = 0
 MAX_POS = 4
+TRACE_FADE_DELAY = 1000
 
-# Creates an image with a single pixel at the x and y coord
-def get_image(x, y):
-    print(x, y)
-    pixels = "00000:00000:00000:00000:00000"
-    index = y * 6 + x
-    pixels = pixels[:index] + '9' + pixels[index + 1:]
-    return Image(pixels)
+class Pixel:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.time = running_time()
+
+    def get_coord(self):
+        return self.x, self.y
+
+
+# Stores Pixel
+trace = []
+
+# Updates the trace
+def update_trace(xpos, ypos):
+    global trace
+
+    if len(trace) == 0: 
+        trace.append(Pixel(xpos, ypos))
+    elif trace[0].get_coord() != (xpos, ypos):
+        trace = [Pixel(xpos, ypos)] + trace
+
+    trace = [p for p in trace if running_time() - p.time < TRACE_FADE_DELAY]
+
+
+def get_image():
+    global trace
+
+    px_str = "00000:00000:00000:00000:00000"
+    for i, pixel in enumerate(trace):
+        index = pixel.y * 6 + pixel.x
+        brightness = 9 - i
+        if brightness <= 0:
+            brightness = 1
+        px_str = px_str[:index] + str(brightness) + px_str[index+1:]
+
+    return Image(px_str)
 
 
 def get_bound_pos(x, y):
@@ -25,7 +56,7 @@ xpos, ypos = 2., 2.
 while True:
     # Returns values -1000...1000
     dx, dy, dz = accelerometer.get_values()
-    
+
     # Scale the acceleration down
     dx *= ACCELERATION
     dy *= ACCELERATION
@@ -36,6 +67,7 @@ while True:
 
     # Bound x and y
     xpos, ypos = get_bound_pos(xpos, ypos)
+    update_trace(int(xpos), int(ypos))
 
-    display.show(get_image(int(xpos), int(ypos)))
+    display.show(get_image())
 
