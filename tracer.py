@@ -7,14 +7,9 @@ MAX_POS = 4
 # Creates an image with a single pixel at the x and y coord
 def get_image(x, y):
     print(x, y)
-    pixels = ""
-    for i in range(5):
-        for j in range(5):
-            if j == x and i == y:
-                pixels += '9'
-                continue
-            pixels += '0'
-        pixels += ':'
+    pixels = "00000:00000:00000:00000:00000"
+    index = y * 6 + x
+    pixels = pixels[:index] + '9' + pixels[index + 1:]
     return Image(pixels)
 
 
