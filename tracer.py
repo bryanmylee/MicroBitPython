@@ -34,14 +34,22 @@ def get_image():
     global trace
 
     px_str = "00000:00000:00000:00000:00000"
+
+    curr_time = running_time()
     for i, pixel in enumerate(trace):
         index = pixel.y * 6 + pixel.x
-        brightness = 9 - i
-        if brightness <= 0:
-            brightness = 1
-        px_str = px_str[:index] + str(brightness) + px_str[index+1:]
+        life = curr_time - pixel.time
+
+        px_str = px_str[:index] + str(get_brightness(life)) + px_str[index+1:]
 
     return Image(px_str)
+
+# Returns 1...9 based on how long a pixel has been alive
+def get_brightness(life):
+    if life >= TRACE_FADE_DELAY:
+        return 0
+
+    return int(9 * (1 - life / TRACE_FADE_DELAY))
 
 
 def get_bound_pos(x, y):
