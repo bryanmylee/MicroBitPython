@@ -27,6 +27,7 @@ def get_average_gradient():
 
     return num / den
 
+
 """
 For debugging: generates a simple line plot of the gradient.
 """
@@ -34,6 +35,7 @@ def print_plot(value):
     value *= 10
     center = 30
     print(" " * (center + int(value)) + "|")
+
 
 last_show_time = running_time()
 while True:
