@@ -28,4 +28,14 @@ This program provides feedback for all button presses, and confirms every charac
 
 To adjust the timing of dots and dashes, as well as the character-parsing delay, modify the settings in the script and flash it onto your micro:bit
 
+### tracer
 
+Move a tracer dot around the screen by tilting the micro:bit.
+
+A trace will appear behind the micro:bit and slowly fade away.
+
+### waveGesture
+
+Place the micro:bit in a reasonably lit environment, then wave across the face of micro:bit to trigger a surprised face on the display.
+
+The ambient light level is tracked over time and practically differentiated to track the rate of change of light level. If the light level drops suddenly, the event is triggered.
